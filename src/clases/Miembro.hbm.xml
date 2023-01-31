@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated 31 ene 2023 18:12:08 by Hibernate Tools 5.4.33.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="Gobierno" name="clases.Miembro" optimistic-lock="none" table="miembro">
+        <id name="codMiembro" type="java.lang.Integer">
+            <column name="codMiembro"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one class="clases.Ministerio" fetch="select" name="ministerio">
+            <column name="codigoMinisterio"/>
+        </many-to-one>
+        <property name="nif" type="string">
+            <column length="9" name="nif" not-null="true" unique="true"/>
+        </property>
+        <property name="nombre" type="string">
+            <column length="100" name="nombre" not-null="true"/>
+        </property>
+        <property name="apellido1" type="string">
+            <column length="100" name="apellido1" not-null="true"/>
+        </property>
+        <property name="alias" type="string">
+            <column length="100" name="alias"/>
+        </property>
+    </class>
+</hibernate-mapping>
