@@ -9,6 +9,12 @@ import java.util.Set;
  */
 public class Ministerio implements java.io.Serializable {
 
+	@Override
+	public String toString() {
+		return "Ministerio [codMinisterio=" + codMinisterio + ", nombre=" + nombre + ", presupuesto=" + presupuesto
+				+ ", gastos=" + gastos +  "]";
+	}
+
 	private Integer codMinisterio;
 	private String nombre;
 	private double presupuesto;

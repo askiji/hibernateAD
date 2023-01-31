@@ -21,8 +21,9 @@ public class Principal {
 		// conecto con hibernate
 		SessionFactory sf = SessionFactoryUtil.getSessionFactory();
 		Session s = sf.openSession();
-
-		
+//		ejercicio1_3(s);
+//		ejercicio2_3(s, 2, 100.0);
+		ejercicio4_3(s, 11);
 		
 		
 		// ejercicio HQL _ Gobierno
@@ -49,6 +50,63 @@ public class Principal {
 		
 		
 //		eje1(s, t);
+	}
+
+	private static void ejercicio4_3(Session s ,int codMinisterio) {
+		Transaction t = s.beginTransaction();
+		try {
+			Ministerio m = new Ministerio();
+			s.load(m, codMinisterio);
+			System.out.println(m.getNombre());
+			// no se meterle el nombre a esto
+			Query q = s.createQuery("Delete Ministerio where nombre like :NombreMinisterio");
+			q.setParameter("NombreMinisterio", m.getNombre());
+			int num = q.executeUpdate();// devuelve la cantidad de departamentos modificados
+			System.out.println("ha eliminado el ministerio");
+			t.commit();
+		} catch (Exception e) {
+			if (t != null) {
+				System.out.println("No se ah podido eliminar");
+				t.rollback();
+			}
+		}
+
+	}
+	private static void ejercicio2_3(Session s, int codigoMinisterio, double importe) {
+		Transaction t = s.beginTransaction();
+		try {
+			Ministerio m = new Ministerio();
+			s.load(m,codigoMinisterio);
+			System.out.println(m.toString());
+			Query q = s.createQuery("Update Ministerio set presupuesto = m.presupuesto + :importe where Ministerio.nombre like :ministerio.nombre" );
+			q.setParameter("importe", importe);
+			q.setParameter("ministerio", m);
+			int num = q.executeUpdate();
+			System.out.println("El nuevo presupuesto es " + m.getPresupuesto());
+			t.commit();
+		} catch (Exception e) {
+			System.err.println("Clave duplicada");
+			if (t != null) {
+				t.rollback();
+			}
+		}
+			
+	}
+	private static void ejercicio1_3(Session s) {
+
+		Transaction t = s.beginTransaction();
+		try {
+			Query q = s.createQuery("Update Miembro set alias='Pringao' where alias is 'null'");
+			int num = q.executeUpdate();
+			System.out.println("Se han metido "+ num +" pringaos");
+			t.commit();
+		} catch (Exception e) {
+			System.err.println("Clave duplicada");
+			if (t != null) {
+				t.rollback();
+			}
+
+		}
 	}
 
 	private static void ejercicio9(Session s) {

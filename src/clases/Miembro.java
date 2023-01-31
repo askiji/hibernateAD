@@ -6,6 +6,12 @@ package clases;
  */
 public class Miembro implements java.io.Serializable {
 
+	@Override
+	public String toString() {
+		return "Miembro [codMiembro=" + codMiembro + ", ministerio=" + ministerio + ", nif=" + nif + ", nombre="
+				+ nombre + ", apellido1=" + apellido1 + ", alias=" + alias + "]";
+	}
+
 	private Integer codMiembro;
 	private Ministerio ministerio;
 	private String nif;
