@@ -23,7 +23,8 @@ public class Principal {
 		Session s = sf.openSession();
 //		ejercicio1_3(s);
 //		ejercicio2_3(s, 2, 100.0);
-		ejercicio4_3(s, 11);
+		ejercicio3_3(s);
+//		ejercicio4_3(s, 11);
 		
 		
 		// ejercicio HQL _ Gobierno
@@ -52,6 +53,29 @@ public class Principal {
 //		eje1(s, t);
 	}
 
+	private static void ejercicio3_3(Session s) {
+		Transaction t = s.beginTransaction();
+		try {
+			// crear media
+			// sacar ministerios
+			// compara medias
+			Query qAvg = s.createQuery("select avg(presupuesto) from Ministerio");
+			double avg = (double) qAvg.getSingleResult();
+			Query q = s.createQuery("Update Ministerio set presupuesto  = presupuesto *1.25 where presupuesto < :avg ");
+			q.setParameter("avg", avg);
+			q.executeUpdate();
+//			Query q1 = s.createQuery("Update from Ministerio set presupuesto  = "
+//					+ "(presupuesto-(presupuesto*0.1)) where presupuesto > (select avg(presupuesto) from Ministerio )");
+//			int numDowngrades = q1.executeUpdate();
+//			System.out.println("Se han aumentado " + numDowngrades + " ministerios");
+			t.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			t.rollback();
+		}
+		
+	}
+
 	private static void ejercicio4_3(Session s ,int codMinisterio) {
 		Transaction t = s.beginTransaction();
 		try {
@@ -75,17 +99,16 @@ public class Principal {
 	private static void ejercicio2_3(Session s, int codigoMinisterio, double importe) {
 		Transaction t = s.beginTransaction();
 		try {
-			Ministerio m = new Ministerio();
-			s.load(m,codigoMinisterio);
-			System.out.println(m.toString());
-			Query q = s.createQuery("Update Ministerio set presupuesto = m.presupuesto + :importe where Ministerio.nombre like :ministerio.nombre" );
+			Query q = s.createQuery("Update Ministerio set presupuesto = presupuesto + :importe where codMinisterio = :codigoMinisterio" );
 			q.setParameter("importe", importe);
-			q.setParameter("ministerio", m);
+			q.setParameter("codigoMinisterio", codigoMinisterio);
 			int num = q.executeUpdate();
+			Ministerio m = new Ministerio();
+			s.load(m, codigoMinisterio);
 			System.out.println("El nuevo presupuesto es " + m.getPresupuesto());
 			t.commit();
 		} catch (Exception e) {
-			System.err.println("Clave duplicada");
+			e.printStackTrace();
 			if (t != null) {
 				t.rollback();
 			}
@@ -96,7 +119,7 @@ public class Principal {
 
 		Transaction t = s.beginTransaction();
 		try {
-			Query q = s.createQuery("Update Miembro set alias='Pringao' where alias is 'null'");
+			Query q = s.createQuery("Update Miembro set alias='Pringao' where alias is null");
 			int num = q.executeUpdate();
 			System.out.println("Se han metido "+ num +" pringaos");
 			t.commit();
